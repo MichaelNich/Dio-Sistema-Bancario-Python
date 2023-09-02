@@ -23,29 +23,19 @@ class Conta:
         """
 
     def depositar(self):
-        self.valor_deposito = None
-        self.check_deposito = (
-            True  # checa se valor é um número e se o valor é maior do que 0
-        )
-
-        while self.check_deposito:
-            self.valor_deposito = input("Insira a quantia desejada para depositar: ")
-
-            # Try except para checar se o valor é numérico
+        while True:
+            valor_deposito = input("Insira a quantia desejada para depositar: ")
             try:
-                self.valor_deposito = float(self.valor_deposito)
-                if (
-                    self.valor_deposito <= 0
-                ):  # checa se valor do deposito é maior do que 0
+                valor_deposito = float(valor_deposito)
+                if valor_deposito <= 0:
                     print("Insira um valor maior do que 0")
                 else:
-                    self.check_deposito = False
+                    self.saldo += valor_deposito
+                    self.extrato += f"Valor depositado: R${valor_deposito:.2f}\n"
+                    print(f"Valor depositado: R${valor_deposito:.2f}")
+                    break
             except ValueError:
                 print("Valor de deposito precisa ser numérico.")
-
-        self.saldo += self.valor_deposito
-        self.extrato += f"Valor depositado: R${self.valor_deposito:.2f}\n"
-        print(f"Valor depositado: R${self.valor_deposito:.2f}")
 
     def sacar(self):
         if self.num_saques == self.LIM_SAQUES:
@@ -56,35 +46,31 @@ class Conta:
         elif self.saldo == 0:
             print("Você não possui nenhum saldo disponível para saque!")
             return
-        else:
-            self.check_saque = True
 
-        while self.check_saque:
-            self.valor_saque = input("Insira a quantia desejada para sacar: ")
-
+        while True:
+            valor_saque = input("Insira a quantia desejada para sacar: ")
             try:
-                self.valor_saque = float(self.valor_saque)
-                if self.valor_saque <= 0:  # checa se valor do deposito é maior do que 0
+                valor_saque = float(valor_saque)
+                if valor_saque <= 0:
                     print("Insira um valor maior do que 0")
-                elif self.valor_saque > self.SAQUE_VALOR_MAX:
+                elif valor_saque > self.SAQUE_VALOR_MAX:
                     print(
-                        "Valor máximo para saque é R$",
-                        f"{self.SAQUE_VALOR_MAX:.2f}! Você possui atualmente: R${self.saldo:.2f}",
+                        f"Valor máximo para saque é R${self.SAQUE_VALOR_MAX:.2f}! Você possui atualmente: R${self.saldo:.2f}"
                     )
-                elif self.valor_saque > self.saldo:
+                elif valor_saque > self.saldo:
                     print(
                         f"Valor insuficiente para saque. Você possui atualmente: R${self.saldo:.2f}"
                     )
                 else:
-                    self.check_saque = False
+                    self.saldo -= valor_saque
+                    self.extrato += f"Valor sacado: R${valor_saque:.2f}\n"
+                    self.num_saques += 1
+                    print(
+                        f"Saque no valor de R${valor_saque:.2f} realizado com sucesso!"
+                    )
+                    break
             except ValueError:
                 print("Valor de saque precisa ser numérico.")
-        print(
-            "Saque no valor de R$", f"{self.valor_saque:.2f}", " realizado com sucesso!"
-        )
-        self.extrato += f"Valor sacado: R${self.valor_saque:.2f}\n"
-        self.saldo -= self.valor_saque
-        self.num_saques += 1
 
     def visualizar_extrato(self):
         print(self.extrato)
