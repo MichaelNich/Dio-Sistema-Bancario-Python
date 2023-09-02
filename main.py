@@ -1,19 +1,13 @@
 import time
-
-
-def checar_valor(valor, valor2):
-    try:
-        valor = float(valor)
-        if valor <= 0:
-            print("Insira um valor maior do que 0")
-        else:
-            valor2 = False
-    except ValueError:
-        print("Valor de deposito precisa ser numérico.")
+import random
 
 
 class Conta:
     def __init__(self):
+        self.cpf = input("Digite seu CPF: ")
+        self.conta = None
+        self.nome = input("Digite seu nome: ")
+        self.idade = input("Digite sua idade: ")
         self.saldo = 0
         self.LIM_SAQUES = 3
         self.num_saques = 0
@@ -78,19 +72,57 @@ class Conta:
         print("#########------#########")
 
 
+class Banco:
+    def __init__(self):
+        self.id = 0
+        self.contas = {}
+
+    def mostrar_menu(self):
+        menu = """
+        [d] = depositar
+        [s] = sacar
+        [e] = extrato
+        [t] = sair
+        
+        Insira a letra correspondente a operação desejada: """
+        return menu
+
+    def criar_conta(self, usuario):
+        agencia = str(
+            random.randint(0, 10000)
+        )  # Gera um número entre 0 e 10000 e transform em string
+        agencia = (
+            (5 - len(agencia)) * "0"
+        ) + agencia  # Adiciona 0 no ínicio da string para o tamanho ser sempre 5
+        conta = str(random.randint(0, 1000000))
+        conta = ((7 - len(agencia)) * "0") + conta
+
+        self.contas[usuario.cpf] = {"agencia": agencia, "conta": conta, "saldo": 0}
+        usuario.agencia = agencia
+        usuario.conta = conta
+
+        print(f"agencia: {usuario.agencia}\nconta: {usuario.conta}\nCPF: {usuario.cpf}")
+
+    def listar_contas(self):
+        print(self.contas)
+
+
 def main():
-    menu = """
-    [d] = depositar
-    [s] = sacar
-    [e] = extrato
-    [t] = sair
-    Insira a letra correspondente a operação desejada: """
+    banco = Banco()
     pessoa = Conta()
+
+    cpf = input("Digite seu CPF para acessar sua conta ou criar uma: ")
+
+    if not pessoa.conta:
+        print("Você não possui uma conta")
+        banco.criar_conta(pessoa)
+    else:
+        agencia = input("Digite o número da sua agência: ")
+        conta = input("Digite o número da sua conta: ")
 
     escolha = None
     while escolha != "t":
-        escolha = input(menu)
-
+        escolha = input(banco.mostrar_menu())
         if escolha == "d":
             pessoa.depositar()
         elif escolha == "s":
