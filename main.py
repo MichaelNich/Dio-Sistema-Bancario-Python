@@ -17,7 +17,7 @@ class Conta:
         self.saldo = 0
         self.LIM_SAQUES = 3
         self.num_saques = 0
-        self.LIMITE_VALOR_SAQUES = 500
+        self.SAQUE_VALOR_MAX = 500
         self.extrato = f"""#########---EXTRATO BANCÁRIO---#########
         Saldo inicial: R${self.saldo}
         """
@@ -48,7 +48,7 @@ class Conta:
         print(f"Valor depositado: R${self.valor_deposito:.2f}")
 
     def sacar(self):
-        if self.num_saques == self.LIMITE_VALOR_SAQUES:
+        if self.num_saques == self.LIM_SAQUES:
             print(
                 "Quantidade máxima diária de saques alcançada. não é possível mais sacar hoje."
             )
@@ -66,9 +66,14 @@ class Conta:
                 self.valor_saque = float(self.valor_saque)
                 if self.valor_saque <= 0:  # checa se valor do deposito é maior do que 0
                     print("Insira um valor maior do que 0")
+                elif self.valor_saque > self.SAQUE_VALOR_MAX:
+                    print(
+                        "Valor máximo para saque é R$",
+                        f"{self.SAQUE_VALOR_MAX:.2f}! Você possui atualmente: R${self.saldo:.2f}",
+                    )
                 elif self.valor_saque > self.saldo:
                     print(
-                        f"Valor insuficiente para saque. você possui atualmente: R${self.saldo:.2f}"
+                        f"Valor insuficiente para saque. Você possui atualmente: R${self.saldo:.2f}"
                     )
                 else:
                     self.check_saque = False
